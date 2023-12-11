@@ -87,8 +87,8 @@
     var graphics = (function () {
         var canvas = null, // Canvas DOM element.
             context = null, // Canvas context for drawing.
-            canvasWidth = 520 * 0.8,
-            canvasHeight = 550 * 0.8, // Adjusted canvas height
+            canvasWidth = 520 * 0.65,
+            canvasHeight = 550 * 0.65, // Adjusted canvas height
             boxSize = 50,
             springInfo = {
                 width: 30, // Adjusted spring width
