@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Oscilador Harmônico</title>
+</head>
+
+<body>
+    <h1>Oscilador Harmônico</h1>
+    <p id="HarmonicOscillator-notSupportedMessage" class="HarmonicOscillator-alert">Por favor, use um navegador mais
+        recente para ver a simulação.</p>
+
+    <div class="HarmonicOscillator">
+        <canvas class="HarmonicOscillator-canvas"></canvas>
+
+        <div class="Buttons">
+            <p class="HarmonicOscillator-isTextCentered">Massa (kg)<br>
+                <input class="HarmonicOscillator-input HarmonicOscillator-inputSmall HarmonicOscillator-isTextCentered"
+                    type="number" id="HarmonicOscillator-mass" min="1" max="10000" step="1" pattern="\d*">
+            </p>
+
+            <p class="HarmonicOscillator-isTextCentered">Constante Elástica (N/m)<br>
+                <input class="HarmonicOscillator-input HarmonicOscillator-inputSmall HarmonicOscillator-isTextCentered"
+                    type="number" id="HarmonicOscillator-springConstant" name="springConstant" min="1" max="10000"
+                    step="1" pattern="\d*">
+            </p>
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

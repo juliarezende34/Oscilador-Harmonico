@@ -1,0 +1,57 @@
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    height: 100vh;
+
+    margin: 0px;
+    padding: 0px;
+}
+
+h1 {
+    color: #108D7B;
+    text-align: center;
+    -webkit-text-stroke: 0.5px black; 
+
+}
+
+.HarmonicOscillator-alert {
+    color: #108D7B(47, 110, 113);
+    border: 1px solid rgb(44, 91, 109);
+    background: #feffff;
+    padding: 5px;
+}
+
+.HarmonicOscillator-input {
+    font-family: inherit;
+    font-size: 120%;
+    /* Aumentando o tamanho do texto */
+    margin: 5px;
+    /* Espaçamento externo entre as caixas */
+    padding: 10px 7px;
+    /* Espaçamento interno das caixas */
+    border: 2px solid #108D7B;
+    /* Adicionando borda às caixas */
+    border-radius: 5px;
+    /* Arredondando as bordas */
+}
+
+.HarmonicOscillator-inputSmall {
+    width: 5em;
+}
+
+.HarmonicOscillator {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+
+    gap: 20px;
+    /* justify-content: space-between; */
+    height: 100%;
+}
+
+.HarmonicOscillator-isTextCentered {
+    text-align: center;
+}
