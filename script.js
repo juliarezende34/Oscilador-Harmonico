@@ -1,15 +1,15 @@
 (function () {
-    // Calcula velocidade e posição
+    // Calculate position and velocity of the box
     var physics = (function () {
-        // ondições iniciais
+        // Initial condition for the system
         var initialConditions = {
-            position: 1.0, // A caixa é mostrada no topo inicialmente
-            velocity: 0.0, // Velocidade
-            springConstant: 100.0, // Quanto maior o valor, mais rígida é a mola
-            mass: 10.0 // A massa do bloco
+            position: 1.0, // Box is shown on the top initially
+            velocity: 0.0, // Velocity is zero
+            springConstant: 100.0, // The higher the value the stiffer the spring
+            mass: 10.0 // The mass of the box
         };
 
-        //Estado atual do sistema
+        // Current state of the system
         var state = {
             /*
             Position of the box:
@@ -19,11 +19,11 @@
             */
             position: 0,
             velocity: 0,
-            springConstant: 0,
-            mass: 0
+            springConstant: 0, // The higher the value the stiffer the spring
+            mass: 0 // The mass of the box
         };
 
-        var deltaT = 0.016; // A duração do incremento de tempo, em segundos.
+        var deltaT = 0.016; // The length of the time increment, in seconds.
 
         function resetStateToInitialConditions() {
             state.position = initialConditions.position;
@@ -32,35 +32,46 @@
             state.mass = initialConditions.mass;
         }
 
-        // Retorna a aceleração (mudança de velocidade) para a posição dada
+        // Returns acceleration (change of velocity) for the given position
         function calculateAcceleration(y) {
-            // Estamos usando a equação de movimento para o oscilador harmônico:
+            // We are using the equation of motion for the harmonic oscillator:
             // a = -(k/m) * y
-            // Onde a é a aceleração, y é o deslocamento, k é a constante da mola e m é a massa.
+            // Where a is acceleration, y is displacement, k is spring constant, and m is mass.
             return -(state.springConstant / state.mass) * y;
         }
-        //Calcula a nova velocidade: velocidade atual mais a mudança.
+
+        // Calculates the new velocity: current velocity plus the change.
         function newVelocity(acceleration) {
             return state.velocity + deltaT * acceleration;
         }
 
-        //Calcula a nova posição: posição atual mais a alteração.
+        // Calculates the new position: current position plus the change.
         function newPosition() {
             return state.position + deltaT * state.velocity;
         }
 
+        // The main function that is called on every animation frame.
+        // It calculates and updates the current position of the box.
+        // function updatePosition() {
+        //     var acceleration = calculateAcceleration(state.position);
+        //     state.velocity = newVelocity(acceleration);
+        //     state.position = newPosition();
+        //     if (state.position > 1) { state.position = 1; }
+        //     if (state.position < -1) { state.position = -1; }
+        // }
         function updatePosition() {
             var acceleration = calculateAcceleration(state.position);
             state.velocity = newVelocity(acceleration);
             state.position = newPosition();
-            //Ajusta os limites para oscilação entre 1 e 0
+
+            // Adjust the limits for oscillation between 1 and 0
             if (state.position > 0.9) {
                 state.position = 0.9;
-                state.velocity = -state.velocity; //Velocidade reversa para mudar de direção
+                state.velocity = -state.velocity; // Reverse velocity to change direction
             }
             if (state.position < 0) {
                 state.position = 0;
-                state.velocity = -state.velocity; //Velocidade reversa para mudar de direção
+                state.velocity = -state.velocity; // Reverse velocity to change direction
             }
         }
 
@@ -72,34 +83,36 @@
         };
     })();
 
-    // desenhar a posição visual da mola
+    // Draw the scene
     var graphics = (function () {
         var canvas = null, // Canvas DOM element.
             context = null, // Canvas context for drawing.
-            canvasWidth = 520 * 0.5,
-            canvasHeight = 550 * 0.5, // Altura da tela ajustada
+            canvasWidth = 520 * 0.8,
+            canvasHeight = 550 * 0.8, // Adjusted canvas height
             boxSize = 50,
             springInfo = {
-                width: 30, // Largura da mola ajustada
-                numberOfSegments: 20 //// Número de segmentos
+                width: 30, // Adjusted spring width
+                numberOfSegments: 20 // Number of segments in the spring.
             },
             colors = {
                 shade30: "#108D7B",
                 shade40: "#108D7B",
                 shade50: "#30D4BC"
             };
-        //Retorna a posição Y do meio da caixa
+
+        // Return the middle Y position of the box
         function boxMiddleY(position) {
             var boxSpaceHeight = canvasHeight - boxSize;
-            return boxSpaceHeight * (position + 1) / 2 + boxSize;
+            return boxSpaceHeight * (position + 1) / 2 + boxSize ;
         }
-        // Desenhe a mola da caixa para o centro. O argumento de posição é a posição da caixa e varia de -1 a 1.
-        // O valor 0 corresponde à posição central, enquanto -1 e 1 são à esquerda e à direita respectivamente.
+
+        // Draw spring from the box to the center. Position argument is the box position and varies from -1 to 1.
+        // Value 0 corresponds to the central position, while -1 and 1 are the left and right respectively.
         function drawSpring(position) {
             var springEndY = boxMiddleY(position),
                 springTopX = (canvasWidth - springInfo.width) / 2,
                 springEndX = canvasWidth / 2,
-                canvasMiddleY = 0,
+                canvasMiddleY = canvasHeight / 2,
                 singleSegmentHeight = (canvasMiddleY - springEndY) / (springInfo.numberOfSegments - 1),
                 springGoesRight = true;
 
@@ -123,8 +136,9 @@
 
             context.stroke();
         }
-        // Desenha uma caixa na posição. Posição é um valor de -1 a 1.
-        // O valor 0 corresponde à posição central, enquanto -1 e 1 são à esquerda e à direita respectivamente.
+
+        // Draw a box at position. Position is a value from -1 to 1.
+        // Value 0 corresponds to the central position, while -1 and 1 are the left and right respectively.
         function drawBox(position) {
             var boxLeftX = Math.floor((canvasWidth - boxSize) / 2);
             var startY = boxMiddleY(position) - boxSize / 2;
@@ -141,9 +155,9 @@
             context.strokeRect(boxLeftX + 0.5, startY + 0.5, boxSize - 1, boxSize - 1);
         }
 
-        //Desenha uma linha horizontal no meio
+        // Draw horizontal line in the middle
         function drawMiddleLine() {
-            var middleY = Math.floor(0);
+            var middleY = Math.floor(canvasHeight / 2);
 
             context.beginPath();
             context.moveTo(0, middleY);
@@ -154,7 +168,8 @@
             context.stroke();
             context.setLineDash([1, 0]);
         }
-        // Limpa tudo e desenha toda a cena: a linha, a mola e a caixa.
+
+        // Clears everything and draws the whole scene: the line, spring, and the box.
         function drawScene(position) {
             context.clearRect(0, 0, canvas.width, canvas.height);
             drawMiddleLine();
@@ -165,7 +180,8 @@
         function hideCanvasNotSupportedMessage() {
             document.getElementById("HarmonicOscillator-notSupportedMessage").style.display = 'none';
         }
-        // Redimensiona a tela para preencher a largura do contêiner
+
+        // Resize canvas to fill the width of the container
         function fitToContainer() {
             canvas.style.width = '100%';
             canvas.style.height = canvasHeight + 'px';
@@ -173,26 +189,26 @@
             canvas.height = canvas.offsetHeight * 1.1;
         }
 
-        // Cria uma tela para desenho e chama o argumento de sucesso
+        // Create canvas for drawing and call success argument
         function init(success) {
-            //Encontre o elemento HTML da tela
+            // Find the canvas HTML element
             canvas = document.querySelector(".HarmonicOscillator-canvas");
 
-            // Verifica se o navegador suporta desenho em tela
+            // Check if the browser supports canvas drawing
             if (!(window.requestAnimationFrame && canvas && canvas.getContext)) { return; }
 
-            // Obtém o contexto da tela para desenho
+            // Get canvas context for drawing
             context = canvas.getContext("2d");
             if (!context) { return; } // Error, the browser does not support canvas
 
-            // Se chegamos a este ponto significa que o navegador pode desenhar
-            //Oculta a mensagem antiga do navegador
+            // If we got to this point it means the browser can draw
+            // Hide the old browser message
             hideCanvasNotSupportedMessage();
 
-            //Atualiza o tamanho da tela
+            // Update the size of the canvas
             fitToContainer();
 
-            //Executa a função de retorno de sucesso
+            // Execute success callback function
             success();
         }
 
@@ -203,10 +219,12 @@
         };
     })();
 
+    // Draw scene
+    // graphics.drawScene(1);
 
-    // Inicia a simulação
+    // Start the simulation
     var simulation = (function () {
-        // O método é chamado 60 vezes por segundo
+        // The method is called 60 times per second
         function animate() {
             physics.updatePosition();
             graphics.drawScene(physics.state.position);
@@ -215,16 +233,16 @@
 
         function start() {
             graphics.init(function () {
-                //Use as condições iniciais para a simulação
+                // Use the initial conditions for the simulation
                 physics.resetStateToInitialConditions();
 
-                // Redesenhe a cena se a página for redimensionada
+                // Redraw the scene if the page is resized
                 window.addEventListener('resize', function (event) {
                     graphics.fitToContainer();
                     graphics.drawScene(physics.state.position);
                 });
 
-                // Inicia a sequência de animação
+                // Start the animation sequence
                 animate();
             });
         }
@@ -235,9 +253,9 @@
     })();
 
     simulation.start();
-    // Obtém informações do usuário para a massa e a constante de mola
+    // Get input for the mass and the spring constant from the user
     var userInput = (function () {
-        //Atualiza massa e constante de mola com valores selecionados
+        // Update mass and spring constant with selected values
         function updateSimulation(massInput, springConstantInput) {
             physics.resetStateToInitialConditions();
             physics.state.mass = parseFloat(massInput.value) || physics.initialConditions.mass;
@@ -245,26 +263,28 @@
         }
 
         function init() {
-            // Mass 
+            // Mass
+            // -----------
 
             var massInput = document.getElementById("HarmonicOscillator-mass");
 
-            // Define o valor da massa inicial
+            // Set initial mass value
             massInput.value = physics.initialConditions.mass;
 
-            //O usuário atualiza em massa na simulação
+            // User updates mass in the simulation
             massInput.addEventListener('input', function () {
                 updateSimulation(massInput, springConstantInput);
             });
 
             // Spring constant
+            // -----------
 
             var springConstantInput = document.getElementById("HarmonicOscillator-springConstant");
 
-            // Define o valor inicial da constante da mola
+            // Set initial spring constant value
             springConstantInput.value = physics.initialConditions.springConstant;
 
-            //O usuário atualiza a constante de primavera na simulação
+            // User updates spring constant in the simulation
             springConstantInput.addEventListener('input', function () {
                 updateSimulation(massInput, springConstantInput);
             });
